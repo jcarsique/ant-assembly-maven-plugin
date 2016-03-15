@@ -71,7 +71,14 @@
         <include name="*.jar" />
       </fileset>
     </resourcecount>
-    <fail>
+    <var name="error.msg"
+         value="Unsatisfied conditions:${line.separator}
+count.bundles: ${count.bundles} expected 87${line.separator}
+count.libs: ${count.libs} expected 149${line.separator}
+filesmatch ${outdir}/includes includes.expected
+count.test: ${count.test} expected 5${line.separator}
+count.test2: ${count.test2} expected 239" />
+    <fail message="${error.msg}">
       <condition>
         <not>
           <and>

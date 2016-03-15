@@ -46,6 +46,7 @@ import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.resolution.DependencyResult;
 import org.eclipse.aether.util.artifact.ArtifactIdUtils;
 import org.eclipse.aether.util.artifact.JavaScopes;
+
 import org.nuxeo.build.ant.AntClient;
 import org.nuxeo.build.maven.AntBuildMojo;
 import org.nuxeo.build.maven.ArtifactDescriptor;
@@ -199,8 +200,10 @@ public class Graph {
             // https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Transitive_Dependencies
             List<DependencyNode> removes = new ArrayList<>();
             for (DependencyNode child : node.getChildren()) {
+                String parentScope = node.getDependency().getScope();
                 String childScope = child.getDependency().getScope();
-                if (JavaScopes.PROVIDED.equals(childScope) || JavaScopes.TEST.equals(childScope)) {
+                if (JavaScopes.PROVIDED.equals(childScope) || JavaScopes.TEST.equals(childScope)
+                        && !JavaScopes.TEST.equals(parentScope)) {
                     AntClient.getInstance().log("Unexpected child node: " + child + " for " + node, Project.MSG_DEBUG);
                     removes.add(child);
                 }
